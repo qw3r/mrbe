@@ -1,17 +1,19 @@
 language: ruby
 rvm:
   - 2.3.0
-
-bundler_args: --without production
-
+bundler_args: "--without production"
 services:
   - postgresql
-
 addons:
-  postgresql: "9.3"
-
+  postgresql: '9.3'
 before_script:
   - psql -c 'create database mbre_test;' -U postgres
-
 env:
   - DATABASE_URL="postgres://postgres@$localhost/mrbe_test"
+deploy:
+  provider: heroku
+  api_key:
+    secure: LmZi7H28dGgoNoNB69lhYYPi5ZmyRNMrIAZWxvVXowZbiHbLlfUX9ardPrh+53EenY39eL+wrJoR5ScKEy8nIqXbQ77pQf8lJukUDDRwU/MkmyeCUOZwx62M0Eaf73h/jAPcwf8OcbnCcy1uXX9UvJbifsTAMiyESch5wVozird49yQ1RAuGmdrwJfJzzh+me7UCwuqpmHd51bvQZbHFs2HpclvUMVklhLecZoktyZYf/skxHMVLlzhUHhedkR/BubZZKzk1kUTjABavuhDwmww4DbEjMj9x5gxkCfIccImXpT7bXoUczriGBVeypetToQg4HxsWzuty+oa049iNrSyUPMveHZXNQ5WPA49Kyud//h8ZQ8ukuEtJbad7Zm8ibwFPDqbi6E84vj9Yr1ZGyVJjq1WPwZNdrmwyjEpERNRabHH+LpDOIuaGt3smVv+E2wBkKOyb0SqT4pNx9TD8WIcbEaoiDm/hM47rrGrgDtoWkqyaAlRm2qdFKLzpUqwyNuyrRyxhkG1v9X9KpsQXrPqrJ62ydHSjIl/QrTJupiSAMAB2smUxLuf5eT2nEK4VYloteMJgdwFS4VsqUO61ATTKJzbhbj0kMU8smUj0jCeVS7yvOfTbYocUtQ5mBYSGR1kDba90nelm6zKsevXVDq/qW8QWZIlN1xUOPSbVyDE=
+  app: mbre-staging
+  on:
+    repo: qw3r/mrbe
