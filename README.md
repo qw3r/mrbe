@@ -1,10 +1,8 @@
 MRBE
 ____
 
-
 Setup
 _____
-
 
 if you don't have a development machine, create one: `docker-machine create rails-dev`
 
