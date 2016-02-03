@@ -1,0 +1,16 @@
+language: ruby
+
+bundler_args: --without production
+
+services:
+  - postgresql
+
+addons:
+  postgresql: "9.3"
+
+
+before_script:
+  - psql -c 'create database mbre_test;' -U postgres
+
+env:
+  - DATABASE_URL="postgres://postgres@$localhost/mrbe_test"
