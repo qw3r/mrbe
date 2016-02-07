@@ -17,7 +17,7 @@ gem 'bcrypt', '~> 3.1.7'
 
 group :development, :test do
   gem 'dotenv-rails', require: 'dotenv/rails-now'
-  gem 'rspec-rails'
+  gem 'rspec-rails', '>= 3.5.0.beta1'
   gem 'factory_girl_rails'
   gem 'faker'
 end
