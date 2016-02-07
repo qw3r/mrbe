@@ -1,18 +1,16 @@
 source 'https://rubygems.org'
 
+ruby '2.3.0'
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '>= 5.0.0.beta2', '< 5.1'
 gem 'pg', '~> 0.18'
 gem 'puma'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.0'
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
 
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
+# Use ActiveModel has_secure_password
+gem 'bcrypt', '~> 3.1.7'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem 'rack-cors'
@@ -21,13 +19,9 @@ group :development, :test do
   gem 'dotenv-rails', require: 'dotenv/rails-now'
   gem 'rspec-rails'
   gem 'factory_girl_rails'
-
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  # gem 'byebug'
 end
 
-group :development do
+group :test do
+  gem 'faker'
+  gem 'shoulda-matchers'
 end
-
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
