@@ -18,7 +18,27 @@ RSpec.describe User, type: :model do
       let(:user) { create(:user) }
       it { is_expected.to be false }
     end
+
+
+    context "when admin flag set but user is not persisted" do
+      let(:user) { build(:user, :admin) }
+      it { is_expected.to be false }
+    end
   end
 
 
+  describe "#guest?" do
+    subject { user.guest? }
+
+    context "when user is not persisted" do
+      let(:user) { build(:user) }
+      it { is_expected.to be true }
+    end
+
+
+    context "when user is persisted" do
+      let(:user) { create(:user) }
+      it { is_expected.to be false }
+    end
+  end
 end

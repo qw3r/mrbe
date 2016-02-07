@@ -6,6 +6,12 @@ class User < ApplicationRecord
 
 
   def admin?
-    is_admin?
+    is_admin? && !guest?
+  end
+
+
+
+  def guest?
+    !persisted?
   end
 end
