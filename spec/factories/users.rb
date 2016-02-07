@@ -3,7 +3,6 @@ FactoryGirl.define do
     username { Faker::Internet.user_name }
     password 'secret'
 
-
     trait :admin do
       is_admin true
     end
