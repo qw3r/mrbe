@@ -20,6 +20,7 @@ gem 'puma'
 group :development, :test do
   gem 'dotenv-rails', require: 'dotenv/rails-now'
   gem 'rspec-rails'
+  gem 'factory_girl_rails'
 
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   # gem 'byebug'
