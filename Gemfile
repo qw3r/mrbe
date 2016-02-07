@@ -19,9 +19,9 @@ group :development, :test do
   gem 'dotenv-rails', require: 'dotenv/rails-now'
   gem 'rspec-rails'
   gem 'factory_girl_rails'
+  gem 'faker'
 end
 
 group :test do
-  gem 'faker'
-  gem 'shoulda-matchers'
+  gem 'shoulda-matchers', require: false
 end
