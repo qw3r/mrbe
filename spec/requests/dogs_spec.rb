@@ -1,12 +1,5 @@
 require 'rails_helper'
 
-RSpec.shared_examples 'http_status' do |code|
-  it "returns with HTTP status code: #{code}" do
-    expect(response).to have_http_status(code)
-  end
-end
-
-
 RSpec.describe "Dogs", type: :request do
   describe "GET /dogs" do
     let!(:dogs) { create_list :dog, 3 }
@@ -24,14 +17,14 @@ RSpec.describe "Dogs", type: :request do
   end
 
 
-  describe "GET /dog/:id" do
+  describe "GET /dogs/:id" do
     before { get dog_path(dog) }
 
-    # context "when requested dog is not exist"  do
-    #   let(:dog) { build :dog, id: 9999 }
-    #
-    #   include_examples "http_status", 404
-    # end
+    context "when requested dog is not exist"  do
+      let(:dog) { build :dog, id: 9999 }
+
+      include_examples "http_status", 404
+    end
 
 
     context "when requested dog exists" do

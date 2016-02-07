@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
-  resources :dogs, expect: [:new, :edit]
+  resources :dogs, expect: [:new, :edit], defaults: {format: 'json'}
 
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  match '*unknown_route', to: 'application#unknown_route', via: :all
 
   # Serve websocket cable requests in-process
   # mount ActionCable.server => '/cable'
