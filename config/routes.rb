@@ -3,6 +3,8 @@ Rails.application.routes.draw do
     resources :tricks, expect: [:new, :edit], shallow: true
   end
 
+  get '/health-check', to: 'application#health_check'
+
   match '*unknown_route', to: 'application#unknown_route', via: :all
 
   # Serve websocket cable requests in-process
