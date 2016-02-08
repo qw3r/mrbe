@@ -1,0 +1,2 @@
+class TrickPolicy < ApplicationPolicy
+end
