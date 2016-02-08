@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  resources :dogs, expect: [:new, :edit], defaults: {format: 'json'}
+  resources :dogs, expect: [:new, :edit], defaults: {format: 'json'} do
+    resources :tricks, expect: [:new, :edit], shallow: true
+  end
 
   match '*unknown_route', to: 'application#unknown_route', via: :all
 

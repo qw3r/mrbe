@@ -20,7 +20,7 @@ RSpec.describe "Dogs", type: :request do
   describe "GET /dogs/:id" do
     before { get dog_path(dog) }
 
-    context "when requested dog is not exist"  do
+    context "when requested dog is not exist" do
       let(:dog) { build :dog, id: 9999 }
 
       include_examples "http_status", 404
