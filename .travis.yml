@@ -22,4 +22,4 @@ deploy:
     repo: qw3r/mrbe
 
 after_deploy:
-  - wget --retry-connrefused --no-check-certificate --tries=10 --timeout=15 http://mrbe-staging.herokuapp.com/health-check
+  - wget --retry-connrefused --no-check-certificate --tries=10 --timeout=15 http://mrbe-staging.herokuapp.com/health-check || travis_terminate 1;
