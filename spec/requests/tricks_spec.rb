@@ -107,6 +107,14 @@ RSpec.describe "Tricks", type: :request do
 
     before { patch trick_path(trick), params: {trick: trick_params} }
 
+
+    context "without any of the required params" do
+      let(:trick_params) { }
+
+      include_examples "http_status", 400
+    end
+
+
     context "with invalid params" do
       let(:trick_params) { {name: ''} }
 
