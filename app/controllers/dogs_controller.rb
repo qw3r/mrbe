@@ -20,6 +20,7 @@ class DogsController < ApplicationController
   # POST /dogs
   def create
     @dog = Dog.new(dog_params)
+    authorize @dog
 
     if @dog.save
       render json: @dog, status: :created, location: @dog
@@ -52,6 +53,9 @@ class DogsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_dog
     @dog = Dog.find(params[:id])
+    authorize @dog
+
+    @dog
   end
 
 

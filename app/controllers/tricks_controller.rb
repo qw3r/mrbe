@@ -21,6 +21,7 @@ class TricksController < ApplicationController
   # POST /dogs/:dog_id/tricks
   def create
     @trick = @dog.tricks.new(trick_params)
+    authorize @trick
 
     if @trick.save
       render json: @trick, status: :created, location: @trick
@@ -59,6 +60,9 @@ class TricksController < ApplicationController
 
   def set_trick
     @trick = Trick.find(params[:id])
+    authorize @trick
+
+    @trick
   end
 
 

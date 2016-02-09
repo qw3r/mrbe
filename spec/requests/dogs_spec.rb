@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe "Dogs", type: :request do
+  let(:visitor) { create :user, :admin }
+
+  before { set_authenticated_user visitor }
+
   describe "GET /dogs" do
     let!(:dogs) { create_list :dog, 3 }
 
