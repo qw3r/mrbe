@@ -12,9 +12,9 @@ james = User.create(username: 'james.franco', password: 'password')
 ethan = User.create(username: 'ethan.hawke', password: 'password')
 
 
-flynn = james.dogs.create name: 'Flynn', breed: 'Border Collie'
-amber = ethan.dogs.create name: 'Amber', breed: 'Border Collie'
-sunny = ethan.dogs.create name: 'Sunny', breed: 'Border Collie - Medium Spitz Mix'
+flynn = Dog.create user: james, name: 'Flynn', breed: 'Border Collie'
+amber = Dog.create user: ethan, name: 'Amber', breed: 'Border Collie'
+sunny = Dog.create user: ethan, name: 'Sunny', breed: 'Border Collie - Medium Spitz Mix'
 
 
 flynn.tricks.create [
