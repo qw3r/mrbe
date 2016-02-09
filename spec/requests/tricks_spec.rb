@@ -61,19 +61,42 @@ RSpec.describe "Tricks", type: :request do
     context "with valid params" do
       let(:trick_params) { attributes_for :trick }
 
-      include_examples "http_status", 201
+      context "as admin" do
+        include_examples "http_status", 201
 
-      it "inserts trick into database" do
-        expected_fields = trick_params.slice(:name, :description).merge(dog_id: dog.id)
-        actual_fields = Trick.last.attributes.slice(*%w(dog_id name description)).symbolize_keys
+        it "inserts trick into database" do
+          expected_fields = trick_params.slice(:name, :description).merge(dog_id: dog.id)
+          actual_fields = Trick.last.attributes.slice(*%w(dog_id name description)).symbolize_keys
 
-        expect(actual_fields).to eq expected_fields
+          expect(actual_fields).to eq expected_fields
+        end
+
+        it "returns the newly created trick" do
+          fields = %w(id name description)
+
+          expect(json_response.slice(*fields)).to eq Trick.last.attributes.slice(*fields)
+        end
       end
 
-      it "returns the newly created trick" do
-        fields = %w(id name description)
 
-        expect(json_response.slice(*fields)).to eq Trick.last.attributes.slice(*fields)
+      context "as user who's not the owner of the dog" do
+        let(:visitor) { create :user }
+
+        include_examples "http_status", 403
+      end
+
+
+      context "as the owner of the dog" do
+        let(:visitor) { dog.user }
+
+        include_examples "http_status", 201
+      end
+
+
+      context "as guest" do
+        let(:visitor) { build :user }
+
+        include_examples "http_status", 403
       end
     end
   end
@@ -94,17 +117,40 @@ RSpec.describe "Tricks", type: :request do
     context "with valid params" do
       let(:trick_params) { {name: Faker::Hipster.word} }
 
-      include_examples "http_status", 200
+      context "as admin" do
+        include_examples "http_status", 200
 
-      it "updates specified trick" do
-        expect(trick.reload.name).to eq trick_params[:name]
+        it "updates specified trick" do
+          expect(trick.reload.name).to eq trick_params[:name]
+        end
+
+        it "returns with the updated trick" do
+          fields = %w(id name description)
+
+          expect(json_response.slice(*fields)).to eq trick.reload.attributes.slice(*fields)
+        end
       end
 
-      it "returns with the updated trick" do
-        fields = %w(id name description)
+      context "as user who's not the owner of the dog" do
+        let(:visitor) { create :user }
 
-        expect(json_response.slice(*fields)).to eq trick.reload.attributes.slice(*fields)
+        include_examples "http_status", 403
       end
+
+
+      context "as the owner of the dog" do
+        let(:visitor) { trick.user }
+
+        include_examples "http_status", 200
+      end
+
+
+      context "as guest" do
+        let(:visitor) { build :user }
+
+        include_examples "http_status", 403
+      end
+
     end
   end
 
@@ -114,10 +160,33 @@ RSpec.describe "Tricks", type: :request do
 
     before { delete trick_path(trick) }
 
-    include_examples "http_status", 204
+    context "as admin" do
+      include_examples "http_status", 204
 
-    it "deletes trick" do
-      expect(Trick.pluck(:id)).to_not include(trick.id)
+      it "deletes trick" do
+        expect(Trick.pluck(:id)).to_not include(trick.id)
+      end
+    end
+
+
+    context "as user who's not the owner of the dog" do
+      let(:visitor) { create :user }
+
+      include_examples "http_status", 403
+    end
+
+
+    context "as the owner of the dog" do
+      let(:visitor) { trick.user }
+
+      include_examples "http_status", 204
+    end
+
+
+    context "as guest" do
+      let(:visitor) { build :user }
+
+      include_examples "http_status", 403
     end
   end
 end

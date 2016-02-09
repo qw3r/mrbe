@@ -54,31 +54,45 @@ RSpec.describe "Dogs", type: :request do
       include_examples "http_status", 422
     end
 
-
     context "with valid params" do
       let(:dog_params) { attributes_for :dog }
 
-      include_examples "http_status", 201
+      context "as admin" do
+        include_examples "http_status", 201
 
-      it "inserts dog into database" do
-        expected_fields = dog_params.slice(:name, :breed)
-        actual_fields = Dog.last.attributes.slice(*%w(name breed)).symbolize_keys
+        it "inserts dog into database" do
+          expected_fields = dog_params.slice(:name, :breed)
+          actual_fields = Dog.last.attributes.slice(*%w(name breed)).symbolize_keys
 
-        expect(actual_fields).to eq expected_fields
+          expect(actual_fields).to eq expected_fields
+        end
+
+        it "sets the authenticated user as the dog's owner" do
+          expect(Dog.last.user).to eq visitor
+        end
+
+        it "returns the newly created dog" do
+          fields = %w(id name breed)
+
+          expect(json_response.slice(*fields)).to eq Dog.last.attributes.slice(*fields)
+        end
       end
 
-      it "sets the authenticated user as the dog's owner" do
-        expect(Dog.last.user).to eq visitor
+
+      context "as user" do
+        let(:visitor) { create :user }
+
+        include_examples "http_status", 201
       end
 
-      it "returns the newly created dog" do
-        fields = %w(id name breed)
 
-        expect(json_response.slice(*fields)).to eq Dog.last.attributes.slice(*fields)
+      context "as guest" do
+        let(:visitor) { build :user }
+
+        include_examples "http_status", 403
       end
     end
   end
-
 
   describe "PATCH/PUT /dogs/:id" do
     let!(:dog) { create :dog }
@@ -95,16 +109,39 @@ RSpec.describe "Dogs", type: :request do
     context "with valid params" do
       let(:dog_params) { {name: Faker::Hipster.word} }
 
-      include_examples "http_status", 200
+      context "as admin" do
+        include_examples "http_status", 200
 
-      it "updates specified dog" do
-        expect(dog.reload.name).to eq dog_params[:name]
+        it "updates specified dog" do
+          expect(dog.reload.name).to eq dog_params[:name]
+        end
+
+        it "returns with the updated dog" do
+          fields = %w(id name breed)
+
+          expect(json_response.slice(*fields)).to eq dog.reload.attributes.slice(*fields)
+        end
       end
 
-      it "returns with the updated dog" do
-        fields = %w(id name breed)
 
-        expect(json_response.slice(*fields)).to eq dog.reload.attributes.slice(*fields)
+      context "as user who's not the owner" do
+        let(:visitor) { create :user }
+
+        include_examples "http_status", 403
+      end
+
+
+      context "as the owner" do
+        let(:visitor) { dog.user }
+
+        include_examples "http_status", 200
+      end
+
+
+      context "as guest" do
+        let(:visitor) { build :user }
+
+        include_examples "http_status", 403
       end
     end
   end
@@ -115,10 +152,33 @@ RSpec.describe "Dogs", type: :request do
 
     before { delete dog_path(dog) }
 
-    include_examples "http_status", 204
+    context "as admin" do
+      include_examples "http_status", 204
 
-    it "deletes dog" do
-      expect(Dog.pluck(:id)).to_not include(dog.id)
+      it "deletes dog" do
+        expect(Dog.pluck(:id)).to_not include(dog.id)
+      end
+    end
+
+
+    context "as user who's not the owner" do
+      let(:visitor) { create :user }
+
+      include_examples "http_status", 403
+    end
+
+
+    context "as the owner" do
+      let(:visitor) { dog.user }
+
+      include_examples "http_status", 204
+    end
+
+
+    context "as guest" do
+      let(:visitor) { build :user }
+
+      include_examples "http_status", 403
     end
   end
 end
