@@ -23,7 +23,7 @@ class ApplicationPolicy
 
 
   def create?
-    !user.guest?
+    false
   end
 
 

@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe TrickPolicy do
   subject { described_class }
   let(:dog) { create :dog }
-  let(:trick) { create :trick, dog: dog}
+  let(:trick) { create :trick, dog: dog }
 
   context 'for guest (unpersisted) user' do
     let(:user) { build :user }
@@ -44,8 +44,13 @@ RSpec.describe TrickPolicy do
     end
 
     permissions :create? do
-      it 'grants access' do
+      it 'grants access if the user owns the parent record' do
+        trick = create :trick, dog: create(:dog, user: user)
         expect(subject).to permit(user, trick)
+      end
+
+      it 'denies access if the user does not own the parent record' do
+        expect(subject).not_to permit(user, trick)
       end
     end
 
