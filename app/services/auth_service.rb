@@ -7,7 +7,9 @@ class AuthService
 
 
   def authenticate
-    User.new
+    ActionController::HttpAuthentication::Basic.authenticate(@request) do |username, password|
+      User.find_by(username: username).try(:authenticate, password)
+    end || User.new
   end
 
 

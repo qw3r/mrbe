@@ -29,6 +29,7 @@ ActiveRecord::Migration.maintain_test_schema!
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
   config.include Helpers::JsonHelper, type: :request
+  config.include Helpers::AuthHelper
 
   config.before(:suite) do
     begin
