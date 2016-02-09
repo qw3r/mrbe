@@ -19,7 +19,7 @@ class DogsController < ApplicationController
 
   # POST /dogs
   def create
-    @dog = Dog.new(dog_params)
+    @dog = current_user.dogs.new(dog_params)
     authorize @dog
 
     if @dog.save
@@ -62,6 +62,6 @@ class DogsController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def dog_params
-    params.require(:dog).permit(:user_id, :name, :breed)
+    params.require(:dog).permit(:name, :breed)
   end
 end

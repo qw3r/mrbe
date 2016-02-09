@@ -56,16 +56,19 @@ RSpec.describe "Dogs", type: :request do
 
 
     context "with valid params" do
-      let(:user) { create :user }
-      let(:dog_params) { attributes_for :dog, user_id: user.id }
+      let(:dog_params) { attributes_for :dog }
 
       include_examples "http_status", 201
 
       it "inserts dog into database" do
-        expected_fields = dog_params.slice(:user_id, :name, :breed)
-        actual_fields = Dog.last.attributes.slice(*%w(user_id name breed)).symbolize_keys
+        expected_fields = dog_params.slice(:name, :breed)
+        actual_fields = Dog.last.attributes.slice(*%w(name breed)).symbolize_keys
 
         expect(actual_fields).to eq expected_fields
+      end
+
+      it "sets the authenticated user as the dog's owner" do
+        expect(Dog.last.user).to eq visitor
       end
 
       it "returns the newly created dog" do
